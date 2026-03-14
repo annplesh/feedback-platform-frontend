@@ -38,14 +38,14 @@ export default function FeedbackCard({ item, index = 0 }) {
 
   return (
     <article
-      className="feedback-card card-reveal bg-white rounded-2xl border border-cream p-6 flex flex-col gap-4"
+      className="feedback-card card-reveal bg-white rounded-xl border border-cream p-4 flex flex-col gap-3"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       {/* Header: avatar + name/date + rating pill */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2">
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${colorClass}`}
+            className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${colorClass}`}
           >
             {initials}
           </div>
@@ -53,10 +53,10 @@ export default function FeedbackCard({ item, index = 0 }) {
             <p className="text-sm font-semibold text-ink leading-snug">
               {item.name}
             </p>
-            <p className="text-xs text-muted mt-0.5">{formatDate(item.date)}</p>
+            <p className="text-[11px] text-muted mt-0.5">{formatDate(item.date)}</p>
           </div>
         </div>
-        <span className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full bg-cream text-ink">
+        <span className="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full bg-cream text-ink">
           {item.rating}/5
         </span>
       </div>

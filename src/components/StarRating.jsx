@@ -1,15 +1,5 @@
 import { useState } from "react";
 
-// StarRating — dual-mode star component.
-//
-// Display mode  (onChange not provided): read-only stars.
-// Input mode    (onChange provided): hover-to-preview, click-to-set.
-//
-// Props:
-//   value    {number}    current rating 1–5
-//   onChange {function}  called with new value (input mode only)
-//   size     {string}    'sm' | 'md' | 'lg'
-
 const SIZE_MAP = {
   sm: "text-base",
   md: "text-2xl",
@@ -33,11 +23,14 @@ export default function StarRating({ value, onChange, size = "md" }) {
           className={[
             sizeClass,
             star <= displayValue ? "text-accent" : "text-cream",
-            onChange ? "star-interactive" : "",
+            onChange
+              ? "cursor-pointer select-none focus:outline-none focus:ring-0"
+              : "",
           ].join(" ")}
           onClick={onChange ? () => onChange(star) : undefined}
           onMouseEnter={onChange ? () => setHovered(star) : undefined}
           role={onChange ? "button" : undefined}
+          tabIndex={onChange ? 0 : undefined}
           aria-label={onChange ? `${star} star` : undefined}
         >
           ★
