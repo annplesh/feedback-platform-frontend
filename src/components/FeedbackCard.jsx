@@ -35,6 +35,7 @@ export default function FeedbackCard({ item, index = 0 }) {
   const colorClass =
     AVATAR_COLORS[item.name.charCodeAt(0) % AVATAR_COLORS.length];
   const initials = getInitials(item.name);
+  const categoryName = item.categories?.name;
 
   return (
     <article
@@ -53,7 +54,9 @@ export default function FeedbackCard({ item, index = 0 }) {
             <p className="text-sm font-semibold text-ink leading-snug">
               {item.name}
             </p>
-            <p className="text-[11px] text-muted mt-0.5">{formatDate(item.date)}</p>
+            <p className="text-[11px] text-muted mt-0.5">
+              {formatDate(item.date)}
+            </p>
           </div>
         </div>
         <span className="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full bg-cream text-ink">
@@ -63,6 +66,13 @@ export default function FeedbackCard({ item, index = 0 }) {
 
       {/* Stars */}
       <StarRating value={item.rating} size="sm" />
+
+      {/* Category badge */}
+      {categoryName && (
+        <span className="self-start text-[11px] font-medium px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-100">
+          {categoryName}
+        </span>
+      )}
 
       {/* Review text */}
       <p className="text-sm text-muted leading-relaxed flex-1">

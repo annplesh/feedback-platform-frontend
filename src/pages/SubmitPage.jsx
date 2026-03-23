@@ -1,5 +1,6 @@
 import { useState } from "react";
 import StarRating from "../components/StarRating";
+import CategorySelect from "../components/CategorySelect";
 
 // SubmitPage — public feedback submission form.
 //
@@ -21,10 +22,11 @@ function hasMeaningfulMessage(value) {
   return trimmed.length >= 10 && /[a-zA-Z]/.test(trimmed);
 }
 
-export default function SubmitPage({ onSubmit }) {
+export default function SubmitPage({ onSubmit, categories = [] }) {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(0);
+  const [categoryId, setCategoryId] = useState("");
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // 'idle' | 'submitting' | 'success'
 
@@ -67,7 +69,12 @@ export default function SubmitPage({ onSubmit }) {
     if (!validateAll()) return;
     setStatus("submitting");
     setTimeout(() => {
-      onSubmit({ name: name.trim(), message: message.trim(), rating });
+      onSubmit({
+        name: name.trim(),
+        message: message.trim(),
+        rating,
+        category_id: categoryId || null,
+      });
       setStatus("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 700);
@@ -77,6 +84,7 @@ export default function SubmitPage({ onSubmit }) {
     setName("");
     setMessage("");
     setRating(0);
+    setCategoryId("");
     setErrors({});
     setStatus("idle");
   }
@@ -128,7 +136,10 @@ export default function SubmitPage({ onSubmit }) {
       >
         {/* Name field */}
         <div className="space-y-1.5">
-          <label htmlFor="name" className="block text-xs xs:text-[10px] font-medium text-ink">
+          <label
+            htmlFor="name"
+            className="block text-xs xs:text-[10px] font-medium text-ink"
+          >
             Your name
           </label>
           <input
@@ -147,6 +158,25 @@ export default function SubmitPage({ onSubmit }) {
             ].join(" ")}
           />
           {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+        </div>
+
+        {/* Category field */}
+        <div className="space-y-1.5">
+          <label
+            htmlFor="category"
+            className="block text-xs xs:text-[10px] font-medium text-ink"
+          >
+            Category <span className="text-muted font-normal">(optional)</span>
+          </label>
+          {categories.length === 0 ? (
+            <div className="w-full h-9 rounded-lg border border-cream bg-paper animate-pulse" />
+          ) : (
+            <CategorySelect
+              categories={categories}
+              value={categoryId}
+              onChange={setCategoryId}
+            />
+          )}
         </div>
 
         {/* Message field */}

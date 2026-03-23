@@ -9,13 +9,16 @@ export default function App() {
   const [page, setPage] = useState("submit"); // 'submit' | 'wall'
 
   // All feedback state lives here, passed down as props
-  const { approvedItems, submitFeedback, loading, error } = useFeedback();
+  const { approvedItems, categories, submitFeedback, loading, error } =
+    useFeedback();
 
   return (
     <div className="min-h-screen bg-paper">
       <Navbar page={page} setPage={setPage} />
 
-      {page === "submit" && <SubmitPage onSubmit={submitFeedback} />}
+      {page === "submit" && (
+        <SubmitPage onSubmit={submitFeedback} categories={categories} />
+      )}
 
       {page === "wall" && (
         <WallPage
