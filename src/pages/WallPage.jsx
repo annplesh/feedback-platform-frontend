@@ -6,7 +6,11 @@ import StarRating from "../components/StarRating";
 // Includes sort controls and a summary stats bar.
 //
 // Props:
-//   items {Array}  approved feedback entries from useFeedback hook
+//   items        {Array}    approved feedback entries from useFeedback hook
+//   user         {object}   current user or null
+//   isAdmin      {boolean}  whether current user is admin
+//   onDelete     {function} delete feedback handler
+//   onLeaveReview {function} navigate to submit page
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Newest first" },
@@ -38,7 +42,13 @@ function calcAverage(items) {
   );
 }
 
-export default function WallPage({ items, onLeaveReview }) {
+export default function WallPage({
+  items,
+  onLeaveReview,
+  user,
+  isAdmin,
+  onDelete,
+}) {
   const [sort, setSort] = useState("newest");
 
   const sorted = sortItems(items, sort);
@@ -86,7 +96,6 @@ export default function WallPage({ items, onLeaveReview }) {
           <span className="w-full text-[11px] xs:text-[10px] text-muted font-medium">
             Sort by:
           </span>
-
           {SORT_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -126,7 +135,14 @@ export default function WallPage({ items, onLeaveReview }) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {sorted.map((item, index) => (
-            <FeedbackCard key={item.id} item={item} index={index} />
+            <FeedbackCard
+              key={item.id}
+              item={item}
+              index={index}
+              user={user}
+              isAdmin={isAdmin}
+              onDelete={onDelete}
+            />
           ))}
         </div>
       )}

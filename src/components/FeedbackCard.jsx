@@ -3,8 +3,11 @@ import StarRating from "./StarRating";
 // FeedbackCard — single review card shown on the Feedback Wall.
 //
 // Props:
-//   item   { id, name, message, rating, date }
-//   index  {number} used for CSS animation stagger delay
+//   item     { id, name, message, rating, date, user_id }
+//   index    {number} used for CSS animation stagger delay
+//   user     {object} current user or null
+//   isAdmin  {boolean} whether current user is admin
+//   onDelete {function} receives item id
 
 const AVATAR_COLORS = [
   "bg-rose-100 text-rose-700",
@@ -31,11 +34,18 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-export default function FeedbackCard({ item, index = 0 }) {
+export default function FeedbackCard({
+  item,
+  index = 0,
+  user,
+  isAdmin,
+  onDelete,
+}) {
   const colorClass =
     AVATAR_COLORS[item.name.charCodeAt(0) % AVATAR_COLORS.length];
   const initials = getInitials(item.name);
   const categoryName = item.categories?.name;
+  const canDelete = isAdmin || user?.id === item.user_id;
 
   return (
     <article
@@ -78,6 +88,16 @@ export default function FeedbackCard({ item, index = 0 }) {
       <p className="text-sm text-muted leading-relaxed flex-1">
         {item.message}
       </p>
+
+      {/* Delete button */}
+      {canDelete && onDelete && (
+        <button
+          onClick={() => onDelete(item.id)}
+          className="self-start text-[11px] text-red-400 hover:text-red-600 transition-colors focus:outline-none focus:ring-0"
+        >
+          Delete
+        </button>
+      )}
     </article>
   );
 }
