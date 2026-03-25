@@ -36,7 +36,7 @@ export default function LoginPage({ onLogin, setPage }) {
     try {
       await onLogin({ email: email.trim(), password });
     } catch (err) {
-      setAuthError(err.message);
+      setAuthError("Invalid email or password.");
       setStatus("error");
     }
   }

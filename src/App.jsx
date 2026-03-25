@@ -11,6 +11,9 @@ export default function App() {
   // Simple string-based routing — no router library needed
   const [page, setPage] = useState("wall"); // 'submit' | 'wall' | 'login' | 'register' | 'admin'
 
+  // userName is set after first review submission for personalized greeting
+  const [userName, setUserName] = useState("");
+
   // All feedback state lives here, passed down as props
   const {
     approvedItems,
@@ -44,6 +47,11 @@ export default function App() {
     setPage("admin");
   }
 
+  async function handleSubmit(data) {
+    await submitFeedback(data);
+    if (!userName) setUserName(data.name);
+  }
+
   return (
     <div className="min-h-screen bg-paper">
       <Navbar
@@ -51,6 +59,7 @@ export default function App() {
         setPage={setPage}
         user={user}
         isAdmin={isAdmin}
+        userName={userName}
         onSignOut={signOut}
         onAdminPage={handleAdminPage}
       />
@@ -84,7 +93,11 @@ export default function App() {
       )}
 
       {page === "submit" && user && (
-        <SubmitPage onSubmit={submitFeedback} categories={categories} />
+        <SubmitPage
+          onSubmit={handleSubmit}
+          categories={categories}
+          onViewAll={() => setPage("wall")}
+        />
       )}
 
       {page === "wall" && (
@@ -92,6 +105,7 @@ export default function App() {
           items={approvedItems}
           loading={loading}
           user={user}
+          isAdmin={isAdmin}
           onDelete={deleteFeedback}
           onLeaveReview={() => (user ? setPage("submit") : setPage("login"))}
         />

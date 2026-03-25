@@ -8,7 +8,9 @@ import CategorySelect from "../components/CategorySelect";
 // Success shows a thank-you screen with a reset option.
 //
 // Props:
-//   onSubmit {function}  receives { name, message, rating }
+//   onSubmit   {function} receives { name, message, rating, category_id }
+//   categories {Array}    list of categories from useFeedback
+//   onViewAll  {function} navigate to wall page
 
 const MAX_MESSAGE = 300;
 
@@ -22,13 +24,14 @@ function hasMeaningfulMessage(value) {
   return trimmed.length >= 10 && /[a-zA-Z]/.test(trimmed);
 }
 
-export default function SubmitPage({ onSubmit, categories = [] }) {
+export default function SubmitPage({ onSubmit, categories = [], onViewAll }) {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(0);
   const [categoryId, setCategoryId] = useState("");
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // 'idle' | 'submitting' | 'success'
+  const [submittedName, setSubmittedName] = useState("");
 
   function validateAll() {
     const e = {};
@@ -75,6 +78,7 @@ export default function SubmitPage({ onSubmit, categories = [] }) {
         rating,
         category_id: categoryId || null,
       });
+      setSubmittedName(name.trim().split(" ")[0]);
       setStatus("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 700);
@@ -87,6 +91,7 @@ export default function SubmitPage({ onSubmit, categories = [] }) {
     setCategoryId("");
     setErrors({});
     setStatus("idle");
+    setSubmittedName("");
   }
 
   // ── Success screen ──────────────────────────────────────
@@ -97,17 +102,27 @@ export default function SubmitPage({ onSubmit, categories = [] }) {
           <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-6 text-2xl">
             ✓
           </div>
-          <h2 className="font-display text-3xl text-ink mb-3">Thank you!</h2>
+          <h2 className="font-display text-3xl text-ink mb-3">
+            Thank you{submittedName ? `, ${submittedName}` : ""}!
+          </h2>
           <p className="text-muted text-sm leading-relaxed mb-8">
-            Your feedback has been submitted and is pending review. We really
-            appreciate you taking the time.
+            Your feedback has been submitted. We really appreciate you taking
+            the time.
           </p>
-          <button
-            onClick={handleReset}
-            className="px-6 py-2.5 bg-ink text-paper rounded-lg text-sm font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-0"
-          >
-            Submit another
-          </button>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={handleReset}
+              className="px-5 py-2.5 border border-cream text-ink rounded-lg text-sm font-medium hover:bg-cream transition-colors focus:outline-none focus:ring-0"
+            >
+              Submit another
+            </button>
+            <button
+              onClick={onViewAll}
+              className="px-5 py-2.5 bg-ink text-paper rounded-lg text-sm font-medium hover:bg-accent transition-colors focus:outline-none focus:ring-0"
+            >
+              View all reviews
+            </button>
+          </div>
         </div>
       </div>
     );

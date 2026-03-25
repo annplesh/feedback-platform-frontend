@@ -6,10 +6,11 @@ import StarRating from "../components/StarRating";
 // Includes sort controls and a summary stats bar.
 //
 // Props:
-//   items        {Array}    approved feedback entries from useFeedback hook
-//   user         {object}   current user or null
-//   isAdmin      {boolean}  whether current user is admin
-//   onDelete     {function} delete feedback handler
+//   items         {Array}    approved feedback entries from useFeedback hook
+//   loading       {boolean}  whether feedback is loading
+//   user          {object}   current user or null
+//   isAdmin       {boolean}  whether current user is admin
+//   onDelete      {function} delete feedback handler
 //   onLeaveReview {function} navigate to submit page
 
 const SORT_OPTIONS = [
@@ -44,12 +45,33 @@ function calcAverage(items) {
 
 export default function WallPage({
   items,
+  loading,
   onLeaveReview,
   user,
   isAdmin,
   onDelete,
 }) {
   const [sort, setSort] = useState("newest");
+
+  // Loading skeleton
+  if (loading) {
+    return (
+      <main className="page-enter max-w-5xl mx-auto px-3 xs:px-2 py-8 xs:py-6">
+        <div className="mb-8">
+          <div className="h-3 w-24 bg-cream rounded animate-pulse mb-3" />
+          <div className="h-10 w-48 bg-cream rounded animate-pulse" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl border border-cream p-3 h-40 animate-pulse"
+            />
+          ))}
+        </div>
+      </main>
+    );
+  }
 
   const sorted = sortItems(items, sort);
   const average = calcAverage(items);
