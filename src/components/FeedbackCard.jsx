@@ -1,3 +1,4 @@
+import { useState } from "react";
 import StarRating from "./StarRating";
 
 // FeedbackCard — single review card shown on the Feedback Wall.
@@ -41,11 +42,29 @@ export default function FeedbackCard({
   isAdmin,
   onDelete,
 }) {
+  const [deleted, setDeleted] = useState(false);
   const colorClass =
     AVATAR_COLORS[item.name.charCodeAt(0) % AVATAR_COLORS.length];
   const initials = getInitials(item.name);
   const categoryName = item.categories?.name;
   const canDelete = isAdmin || user?.id === item.user_id;
+
+  async function handleDelete() {
+    await onDelete(item.id);
+    setDeleted(true);
+  }
+
+  // ── Deleted state ──────────────────────────────────────
+  if (deleted) {
+    return (
+      <article
+        className="feedback-card bg-white rounded-xl border border-cream p-3 xs:p-2.5 flex items-center justify-center min-h-[120px]"
+        style={{ animationDelay: `${index * 60}ms` }}
+      >
+        <p className="text-sm text-emerald-600 font-medium">✓ Review deleted</p>
+      </article>
+    );
+  }
 
   return (
     <article
@@ -92,7 +111,7 @@ export default function FeedbackCard({
       {/* Delete button */}
       {canDelete && onDelete && (
         <button
-          onClick={() => onDelete(item.id)}
+          onClick={handleDelete}
           className="self-start text-[11px] text-red-400 hover:text-red-600 transition-colors focus:outline-none focus:ring-0"
         >
           Delete

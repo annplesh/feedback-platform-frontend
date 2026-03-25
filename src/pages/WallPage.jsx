@@ -52,6 +52,14 @@ export default function WallPage({
   onDelete,
 }) {
   const [sort, setSort] = useState("newest");
+  const [toast, setToast] = useState("");
+
+  async function handleDelete(id) {
+    await onDelete(id);
+    setToast("Review deleted successfully.");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => setToast(""), 5000);
+  }
 
   // Loading skeleton
   if (loading) {
@@ -112,6 +120,15 @@ export default function WallPage({
         )}
       </div>
 
+      {/* Delete toast */}
+      {toast && (
+        <div className="mb-6 flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-ink text-paper rounded-full text-xs font-medium shadow-sm">
+            ✓ {toast}
+          </div>
+        </div>
+      )}
+
       {/* Sort controls */}
       {items.length > 0 && (
         <div className="flex flex-wrap gap-2 xs:gap-1 mb-6">
@@ -163,7 +180,7 @@ export default function WallPage({
               index={index}
               user={user}
               isAdmin={isAdmin}
-              onDelete={onDelete}
+              onDelete={handleDelete}
             />
           ))}
         </div>
