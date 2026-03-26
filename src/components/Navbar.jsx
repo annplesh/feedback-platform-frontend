@@ -91,17 +91,6 @@ export default function Navbar({
               >
                 Sign In
               </button>
-              <button
-                onClick={() => setPage("register")}
-                className={[
-                  "px-3 py-1.5 xs:px-2 xs:py-0.5 rounded-md text-xs font-medium transition-colors focus:outline-none focus:ring-0",
-                  page === "register"
-                    ? "bg-ink text-paper"
-                    : "text-muted hover:text-ink hover:bg-cream",
-                ].join(" ")}
-              >
-                Sign Up
-              </button>
             </div>
           ) : (
             /* Avatar dropdown — authenticated */
