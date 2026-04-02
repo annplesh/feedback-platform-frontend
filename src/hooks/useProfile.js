@@ -85,5 +85,36 @@ export function useProfile(userId, onAvatarUpdate) {
     }
   }
 
-  return { avatarUrl, uploading, error, uploadAvatar };
+  // Delete avatar from Storage and clear profile
+  async function deleteAvatar() {
+    if (!avatarUrl) return;
+    setUploading(true);
+    setError(null);
+    try {
+      const path = avatarUrl.split("/avatars/")[1];
+      if (path) {
+        const { error: removeError } = await supabase.storage
+          .from("avatars")
+          .remove([decodeURIComponent(path)]);
+        if (removeError) throw removeError;
+      }
+
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ avatar_url: null, updated_at: new Date().toISOString() })
+        .eq("id", userId);
+      if (profileError) throw profileError;
+
+      setAvatarUrl(null);
+      if (onAvatarUpdate) onAvatarUpdate();
+    } catch (err) {
+      console.error("Avatar delete failed:", err.message);
+      setError("Failed to delete avatar. Please try again.");
+      setTimeout(() => setError(null), 4000);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return { avatarUrl, uploading, error, uploadAvatar, deleteAvatar };
 }

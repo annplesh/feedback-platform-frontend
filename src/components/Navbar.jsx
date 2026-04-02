@@ -30,6 +30,7 @@ export default function Navbar({
     uploading,
     error: avatarError,
     uploadAvatar,
+    deleteAvatar,
   } = useProfile(user?.id, onAvatarUpdate);
 
   const links = [
@@ -119,6 +120,7 @@ export default function Navbar({
                   }
                   uploading={uploading}
                   onUpload={uploadAvatar}
+                  onDelete={deleteAvatar}
                   error={avatarError}
                   size="sm"
                 />
