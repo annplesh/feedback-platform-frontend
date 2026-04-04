@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 
+const PAGE_SIZE = 9;
+
 export function useFeedback() {
   const [approvedItems, setApprovedItems] = useState([]);
   const [allItems, setAllItems] = useState([]);
@@ -8,6 +10,8 @@ export function useFeedback() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const isAdmin = user?.user_metadata?.role === "admin";
 
@@ -94,15 +98,16 @@ export function useFeedback() {
     }
   }
 
-  // Fetch approved feedback sorted by date
+  // Fetch approved feedback sorted by date (first page only)
   async function fetchFeedback(showLoading = true) {
     if (showLoading) setLoading(true);
 
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("feedback")
-      .select("*, categories(name)")
+      .select("*, categories(name)", { count: "exact" })
       .eq("approved", true)
-      .order("date", { ascending: false });
+      .order("date", { ascending: false })
+      .range(0, PAGE_SIZE - 1);
 
     if (error) {
       setError(error.message);
@@ -113,9 +118,31 @@ export function useFeedback() {
       if (showLoading || itemsWithProfiles.length > 0) {
         setApprovedItems(itemsWithProfiles);
       }
+      setHasMore(data.length < count);
     }
 
     if (showLoading) setLoading(false);
+  }
+
+  // Load next page and append to existing list
+  async function loadMore() {
+    setIsLoadingMore(true);
+
+    const from = approvedItems.length;
+    const { data, error, count } = await supabase
+      .from("feedback")
+      .select("*, categories(name)", { count: "exact" })
+      .eq("approved", true)
+      .order("date", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (!error) {
+      const itemsWithProfiles = await fetchProfiles(data);
+      setApprovedItems((prev) => [...prev, ...itemsWithProfiles]);
+      setHasMore(from + data.length < count);
+    }
+
+    setIsLoadingMore(false);
   }
 
   // Fetch all feedback for admin
@@ -217,5 +244,8 @@ export function useFeedback() {
     signOut,
     loading,
     error,
+    hasMore,
+    isLoadingMore,
+    loadMore,
   };
 }

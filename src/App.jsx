@@ -29,6 +29,9 @@ export default function App() {
     signIn,
     signOut,
     loading,
+    hasMore,
+    isLoadingMore,
+    loadMore,
   } = useFeedback();
 
   async function handleLogin(credentials) {
@@ -111,6 +114,9 @@ export default function App() {
           isAdmin={isAdmin}
           onDelete={deleteFeedback}
           onLeaveReview={() => (user ? setPage("submit") : setPage("login"))}
+          hasMore={hasMore}
+          isLoadingMore={isLoadingMore}
+          loadMore={loadMore}
         />
       )}
 

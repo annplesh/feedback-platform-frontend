@@ -51,9 +51,18 @@ export default function WallPage({
   user,
   isAdmin,
   onDelete,
+  hasMore,
+  isLoadingMore,
+  loadMore,
 }) {
   const [sort, setSort] = useState("newest");
   const [toast, setToast] = useState("");
+  const [pagesLoaded, setPagesLoaded] = useState(1);
+
+  async function handleLoadMore() {
+    await loadMore();
+    setPagesLoaded((p) => p + 1);
+  }
 
   async function handleDelete(id) {
     await onDelete(id);
@@ -187,6 +196,29 @@ export default function WallPage({
               onDelete={handleDelete}
             />
           ))}
+        </div>
+      )}
+
+      {/* Load more + Back to top */}
+      {sorted.length > 0 && (
+        <div className="flex flex-col items-center gap-3 mt-10">
+          {hasMore && (
+            <button
+              onClick={handleLoadMore}
+              disabled={isLoadingMore}
+              className="px-6 py-2.5 rounded-full bg-ink text-paper text-sm font-medium hover:bg-accent transition-colors disabled:opacity-50 focus:outline-none focus:ring-0"
+            >
+              {isLoadingMore ? "Loading..." : "Load more"}
+            </button>
+          )}
+          {pagesLoaded >= 2 && (
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="text-xs text-muted hover:text-ink transition-colors focus:outline-none focus:ring-0"
+            >
+              ↑ Back to top
+            </button>
+          )}
         </div>
       )}
     </main>
