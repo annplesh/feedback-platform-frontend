@@ -65,7 +65,7 @@ export default function AskAI() {
           <button
             key={q}
             onClick={() => handleExampleClick(q)}
-            className="text-[11px] px-2.5 py-1 rounded-full border border-cream text-muted hover:border-ink hover:text-ink active:border-ink active:text-ink active:scale-95 [touch-action:manipulation] transition-[colors,transform] focus:outline-none focus:ring-0"
+            className="text-[11px] px-2.5 py-1 rounded-full border border-cream text-muted hover:bg-black/5 active:bg-black/10 active:scale-95 [touch-action:manipulation] transition-[colors,transform] focus:outline-none focus:ring-2 focus:ring-black/10"
           >
             {q}
           </button>
