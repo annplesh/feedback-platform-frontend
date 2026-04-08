@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to FeedbackHub are documented in this file.
+All notable changes to FeedbackHub are documented in this file.  
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
@@ -14,11 +14,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Google OAuth — sign in with Google account
 - Supabase Edge Functions: `send-welcome-email`, `send-review-confirmation`, `ask-ai`
 - CORS headers on all Edge Functions
+- Playwright end‑to‑end test suite (auth, submit, sorting, realtime, admin actions)
 
 ### Changed
 
 - Navbar Sign Up button removed — available inside Sign In form
 - Error message on login simplified to "Invalid email or password."
+- Improved Load More button behavior on mobile (full‑width + xxs padding fix)
+
+### Fixed
+
+- Corrected pagination `hasMore` logic using exact count
 
 ---
 

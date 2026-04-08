@@ -1,8 +1,8 @@
-# FeedbackHub — Modern Feedback Platform
+# FeedbackHub — Full‑Stack Feedback & AI Insights Platform
 
-A clean, modern feedback platform built with React, Vite, Tailwind CSS and Supabase.  
+A clean, modern full‑stack feedback platform built with React, Vite, Tailwind CSS and Supabase.  
 Users can submit reviews, browse community feedback, sort by rating or date, and explore AI‑powered insights.  
-Designed as a polished, production‑ready mini‑SaaS to demonstrate full‑stack development and real UX quality.
+Designed as a polished, production‑ready mini‑SaaS showcasing real full‑stack architecture, realtime features, secure auth, and refined UX.
 
 ![Hero Screenshot — WallPage with AI](./screenshots/wall-ai-hero.png)
 
@@ -37,11 +37,43 @@ Designed as a polished, production‑ready mini‑SaaS to demonstrate full‑sta
 - Updated WallPage styling and spacing
 - Added custom favicon (SVG + PNG)
 
+### **Filtering UX**
+
+- Refined filter buttons (soft hover/active states)
+- Added `focus-visible` ring for accessibility
+- Removed default browser outlines
+
+### **BackToTop Improvements**
+
+- Smoother floating animation
+- Reduced jitter on scroll
+- Better mobile behavior
+
+### **Pagination & Mobile UX**
+
+- Corrected `hasMore` logic for accurate pagination
+- Improved Load More button (full‑width on mobile + 320px padding fix)
+- Smoother loading transitions
+
+### **Unified Button System**
+
+- Consistent hover, active, and disabled states across the app
+- Improved tactile feel on mobile (`active:scale-95`)
+- Removed inconsistent outlines
+
+### **AI Widget UI**
+
+- Custom AskAI button styling
+- Removed default focus outlines
+- Improved mobile tap behavior
+
 ### **Stability & Realtime**
 
 - Fixed empty‑state flicker after inactivity
 - Silent refetch no longer overwrites data
 - Added realtime reconnect handler
+- Prevented data overwrite on reconnect
+- Improved channel subscription handling
 - Normalized timestamps to UTC before saving
 
 ### **Responsive Design**
@@ -137,6 +169,30 @@ npm run dev
 Full SQL schema, RLS policies, and integration details are available in:
 
 CLAUDE.md — technical documentation for developers.
+
+---
+
+## 🧪 End‑to‑End Testing (Playwright)
+
+FeedbackHub includes a complete Playwright e2e test suite covering:
+
+- Authentication flow (login, register)
+- Submitting new feedback
+- Sorting and filtering on WallPage
+- Realtime updates and pagination
+- Admin moderation actions
+
+Run tests:
+
+```bash
+npx playwright test
+```
+
+View report:
+
+```bash
+npx playwright show-report
+```
 
 ---
 
