@@ -29,6 +29,7 @@ export default function CategorySelect({ categories, value, onChange }) {
       {/* Trigger button */}
       <button
         type="button"
+        aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         className="w-full px-3 py-2 rounded-lg border border-cream text-sm xs:text-xs bg-paper transition-colors [touch-action:manipulation] focus:outline-none focus:ring-0 flex items-center justify-between"
       >
@@ -44,8 +45,8 @@ export default function CategorySelect({ categories, value, onChange }) {
 
       {/* Dropdown list */}
       {open && (
-        <ul className="absolute z-10 mt-1 w-full bg-white border border-cream rounded-lg shadow-sm overflow-hidden">
-          <li>
+        <ul role="listbox" className="absolute z-10 mt-1 w-full bg-white border border-cream rounded-lg shadow-sm overflow-hidden">
+          <li role="option" aria-selected={value === ""}>
             <button
               type="button"
               onClick={() => {
@@ -58,7 +59,7 @@ export default function CategorySelect({ categories, value, onChange }) {
             </button>
           </li>
           {categories.map((cat) => (
-            <li key={cat.id}>
+            <li key={cat.id} role="option" aria-selected={value === cat.id}>
               <button
                 type="button"
                 onClick={() => {

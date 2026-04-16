@@ -14,8 +14,9 @@ export default function StarRating({ value, onChange, size = "md" }) {
   return (
     <span
       className="flex gap-0.5"
+      role={onChange ? "group" : "img"}
+      aria-label={onChange ? "Select rating" : `Rating: ${value} out of 5`}
       onMouseLeave={onChange ? () => setHovered(0) : undefined}
-      aria-label={`Rating: ${value} out of 5`}
     >
       {[1, 2, 3, 4, 5].map((star) => (
         <span
