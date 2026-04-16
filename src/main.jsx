@@ -4,6 +4,9 @@ import App from "./App";
 import "./index.css";
 import * as Sentry from "@sentry/react";
 
+console.log("SENTRY DSN:", import.meta.env.VITE_SENTRY_DSN);
+console.log("MODE:", import.meta.env.MODE);
+
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
