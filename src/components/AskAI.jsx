@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 
 // AskAI — AI-powered review analysis widget.
@@ -15,6 +15,10 @@ export default function AskAI() {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const timerRef = useRef(null);
+
+  useEffect(() => () => clearInterval(timerRef.current), []);
 
   async function handleAsk() {
     if (!question.trim()) return;
@@ -39,6 +43,13 @@ export default function AskAI() {
       console.error("Ask AI failed:", err.message);
     } finally {
       setLoading(false);
+      setCooldown(10);
+      timerRef.current = setInterval(() => {
+        setCooldown((c) => {
+          if (c <= 1) { clearInterval(timerRef.current); return 0; }
+          return c - 1;
+        });
+      }, 1000);
     }
   }
 
@@ -86,10 +97,10 @@ export default function AskAI() {
         />
         <button
           onClick={handleAsk}
-          disabled={loading || !question.trim()}
+          disabled={loading || !question.trim() || cooldown > 0}
           className="px-4 py-2 rounded-lg text-xs font-semibold bg-ink text-paper hover:bg-accent active:bg-accent/80 active:scale-95 [touch-action:manipulation] transition-[colors,transform] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-0"
         >
-          {loading ? "…" : "Ask"}
+          {loading ? "…" : cooldown > 0 ? `Wait ${cooldown}s` : "Ask"}
         </button>
       </div>
 

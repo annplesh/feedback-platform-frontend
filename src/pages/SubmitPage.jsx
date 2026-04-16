@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import StarRating from "../components/StarRating";
 import CategorySelect from "../components/CategorySelect";
 
@@ -32,6 +32,10 @@ export default function SubmitPage({ onSubmit, categories = [], onViewAll }) {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // 'idle' | 'submitting' | 'success'
   const [submittedName, setSubmittedName] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const timerRef = useRef(null);
+
+  useEffect(() => () => clearInterval(timerRef.current), []);
 
   function validateAll() {
     const e = {};
@@ -81,6 +85,13 @@ export default function SubmitPage({ onSubmit, categories = [], onViewAll }) {
       setSubmittedName(name.trim().split(" ")[0]);
       setStatus("success");
       window.scrollTo({ top: 0, behavior: "smooth" });
+      setCooldown(30);
+      timerRef.current = setInterval(() => {
+        setCooldown((c) => {
+          if (c <= 1) { clearInterval(timerRef.current); return 0; }
+          return c - 1;
+        });
+      }, 1000);
     }, 700);
   }
 
@@ -249,11 +260,15 @@ export default function SubmitPage({ onSubmit, categories = [], onViewAll }) {
         {/* Submit button */}
         <button
           type="submit"
-          disabled={status === "submitting"}
+          disabled={status === "submitting" || cooldown > 0}
           data-testid="submit-button"
           className="w-full py-2 rounded-lg text-xs xs:text-[10px] font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-ink text-paper hover:bg-accent active:bg-accent/80 active:scale-95 [touch-action:manipulation] focus:outline-none focus:ring-0"
         >
-          {status === "submitting" ? "Submitting…" : "Submit Feedback"}
+          {cooldown > 0
+            ? `Please wait ${cooldown}s`
+            : status === "submitting"
+            ? "Submitting…"
+            : "Submit Feedback"}
         </button>
       </form>
     </main>
